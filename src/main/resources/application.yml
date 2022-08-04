@@ -1,0 +1,9 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:mysql://localhost:3307/bitearning
+    username: root
+    password: my-password
+    driver-class-name: com.mysql.cj.jdbc.Driver
