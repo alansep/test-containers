@@ -1,15 +1,15 @@
 package comtestcontainers.TestContainers.service;
 
+import comtestcontainers.TestContainers.containers.MongoDBTestContainer;
 import comtestcontainers.TestContainers.containers.MySQLTestContainer;
 import comtestcontainers.TestContainers.model.Movement;
 import comtestcontainers.TestContainers.model.User;
 import comtestcontainers.TestContainers.repository.MovementRepository;
-import comtestcontainers.TestContainers.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
+import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -23,48 +23,42 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class BalanceServiceTest {
 
     @Container
-    public static MySQLContainer container = MySQLTestContainer.getInstance();
+    public static MongoDBContainer container = MongoDBTestContainer.getInstance();
 
     @Autowired
     private MovementRepository movementRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private BalanceService balanceService;
 
-    private User user;
+    private User user1, user2;
 
     @BeforeEach
     void setUp(){
-
         movementRepository.deleteAll();
-        userRepository.deleteAll();
-
-        user = userRepository.save(new User("Gabriel"));
-
+        user1 = new User(1, "Vladimir");
+        user2 = new User(2, "Ednaldo");
     }
 
     @Test
     void givenAnUserAndThreeMovements_whenCallGetBalanceBy_ReturnsValueEqualsToTen() {
 
-        movementRepository.save(new Movement(user, new BigDecimal("5.00")));
-        movementRepository.save(new Movement(user, new BigDecimal("15.00")));
-        movementRepository.save(new Movement(user, new BigDecimal("-10.00")));
+        movementRepository.save(new Movement(user1, new BigDecimal("5.00")));
+        movementRepository.save(new Movement(user2, new BigDecimal("15.00")));
+        movementRepository.save(new Movement(user2, new BigDecimal("-10.00")));
 
-        assertEquals(new BigDecimal("10.00"), balanceService.getBalanceBy(user));
+        assertEquals(new BigDecimal("5.00"), balanceService.getBalanceBy(user2));
 
     }
 
     @Test
     void givenAnUserAndThreeMovements_whenCallGetBalanceBy_ReturnsValueEqualsToZero() {
 
-        movementRepository.save(new Movement(user, new BigDecimal("5.00")));
-        movementRepository.save(new Movement(user, new BigDecimal("15.00")));
-        movementRepository.save(new Movement(user, new BigDecimal("-20.00")));
+        movementRepository.save(new Movement(user2, new BigDecimal("5.00")));
+        movementRepository.save(new Movement(user1, new BigDecimal("15.00")));
+        movementRepository.save(new Movement(user1, new BigDecimal("-20.00")));
 
-        assertEquals(new BigDecimal("00.00"), balanceService.getBalanceBy(user));
+        assertEquals(new BigDecimal("-5.00"), balanceService.getBalanceBy(user1));
 
     }
 

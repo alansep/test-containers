@@ -2,9 +2,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-  datasource:
-    url: ${HOST}
-    username: ${USERNAME}
-    password: ${PASSWORD}
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
+  data:
+    mongodb:
+      uri: mongodb://${HOST}/${DATABASE}
+      database: ${DATABASE}

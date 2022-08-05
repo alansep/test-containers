@@ -1,14 +1,13 @@
 package comtestcontainers.TestContainers.repository;
 
 import comtestcontainers.TestContainers.model.Movement;
-import comtestcontainers.TestContainers.model.User;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
 
-public interface MovementRepository extends JpaRepository<Movement, Long> {
+public interface MovementRepository extends MongoRepository<Movement, String> {
 
-    List<Movement> findByUser(User user);
+    List<Movement> findByUserId(Integer id);
+
 
 }
-

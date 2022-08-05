@@ -3,27 +3,29 @@ package comtestcontainers.TestContainers.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.UUID;
 
-@Table
-@Entity
+
 @Getter
 @Setter
 @NoArgsConstructor
+@Document("movements")
 public class Movement {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
+
+    private User user;
 
     private BigDecimal value;
 
-    @ManyToOne
-    private User user;
 
     public Movement(User user, BigDecimal value) {
+        this.id = UUID.randomUUID().toString();
         this.user = user;
         this.value = value;
     }

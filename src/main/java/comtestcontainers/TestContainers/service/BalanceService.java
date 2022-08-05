@@ -14,7 +14,7 @@ public class BalanceService {
     private final MovementRepository movementRepository;
 
     public BigDecimal getBalanceBy(User user){
-        return movementRepository.findByUser(user).stream().map(Movement::getValue).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+        return movementRepository.findByUserId(user.getId()).stream().map(Movement::getValue).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
     }
 
 }
